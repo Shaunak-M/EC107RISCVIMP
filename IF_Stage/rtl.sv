@@ -13,7 +13,7 @@ module if_stage (
     assign pc_next = and_out ? pc_signed_offset : pc_new;
 
     always_ff @(posedge clk or posedge reset) begin
-        if (reset)       address <= 32'b0;
+        if (reset)       address <= 32'h8000_0000;
         else if (!stall) address <= pc_next;
     end
 endmodule
