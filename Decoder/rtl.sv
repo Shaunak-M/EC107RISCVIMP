@@ -38,4 +38,43 @@ module decoder (
                 imm     = instruction[31:20];
                 imm11_5 = instruction[31:25];
             end
-            7'b0000011: begin
+            7'b0000011: begin // Load
+                rd  = instruction[11:7];
+                fn3 = instruction[14:12];
+                rs1 = instruction[19:15];
+                imm = instruction[31:20];
+            end
+            7'b0100011: begin // Store
+                fn3 = instruction[14:12];
+                rs1 = instruction[19:15];
+                rs2 = instruction[24:20];
+                imm = {instruction[31:25], instruction[11:7]};
+            end
+            7'b1100011: begin // Branch
+                fn3 = instruction[14:12];
+                rs1 = instruction[19:15];
+                rs2 = instruction[24:20];
+                imm = {instruction[31], instruction[7], instruction[30:25], instruction[11:8]};
+            end
+            7'b1101111: begin // JAL
+                rd     = instruction[11:7];
+                imm_uj = {instruction[31], instruction[19:12], instruction[20], instruction[30:21]};
+            end
+            7'b1100111: begin // JALR
+                rd  = instruction[11:7];
+                fn3 = instruction[14:12];
+                rs1 = instruction[19:15];
+                imm = instruction[31:20];
+            end
+            7'b0110111: begin // LUI
+                rd     = instruction[11:7];
+                imm_uj = instruction[31:12];
+            end
+            7'b0010111: begin // AUIPC
+                rd     = instruction[11:7];
+                imm_uj = instruction[31:12];
+            end
+            default: ; // unsupported: all outputs stay 0
+        endcase
+    end
+endmodule
